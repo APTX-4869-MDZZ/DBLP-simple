@@ -6,26 +6,24 @@ with open('1.in') as f:
     lines = f.readlines()
     fields = dict()
     for line in lines:
-        data = line.split(' ')
-        if data[0] == 'type=':
-            fields['id'] = cnt
-            cnt += 1
+        equal_position = line.find('=')
+        key = line[:equal_position]
+        value = line[equal_position+1: -1]
+        if key == 'type':
+          cnt += 1
+          if len(fields.keys()) != 0:
             listFields.append(fields)
-            fields = {"type": data[1][:-1]}
-            continue
-        val = ""
-        for i in range(1, len(data)):
-            val += data[i][:-1] + ' '
-        key = data[0][:-1]
+          fields = {'type': value}
+          continue
         if key in fields:
             fields[key] += ','
         else:
             fields[key] = ''
-        fields[key] += val[:-1]
-
+        fields[key] += value
 
 with open('info.json', 'w') as f:
     print('[', file=f)
-    for fileds in listFields:
+    for fileds in listFields[:-1]:
         print(json.dumps(fileds) + ',', file=f)
+    print(json.dumps(listFields[-1]), file=f)
     print(']', file=f)
