@@ -2,11 +2,11 @@ import pymongo
 import json
 import time
 
-client = pymongo.MongoClient(host='10.176.64.55', port=37017)
+client = pymongo.MongoClient(host='localhost', port=27017)
 db = client['dblp']
 col = db['info']
 
-with open('info.json') as f:
+with open('info.json', 'r') as f:
     data = json.load(f)
     # print(data)
     # for x in data:
