@@ -1,0 +1,52 @@
+1.搜索论文（暂时先不考虑分页的问题，如果结果太多，回头加一个参数调整）
+url: /dblp/search
+method: GET
+params:
+  q:搜索query
+  field:搜索字段[all/paper/author/year/venue/type]
+response(json):
+  [
+    {
+      title: 论文标题,
+      authors: [
+        作者列表
+      ],
+      venue: 会议/期刊信息,
+      domains: [
+        {
+          _id: 领域id,
+          name: 领域名
+        }
+      ],
+    },
+    ...
+  ]
+
+2.获取相关领域论文
+url: /dblp/related_domain
+method: GET
+params:
+  domain:领域名
+response(json):
+  [
+    {
+      title: 论文标题,
+      authors: [
+        作者列表
+      ],
+      venue: 会议/期刊信息,
+      ...
+    },
+    ...
+  ]
+
+3.相关作者
+url: /dblp/related_author
+method: GET
+params:
+  author:作者名
+response(json):
+  [
+    作者列表,
+    ...
+  ]
