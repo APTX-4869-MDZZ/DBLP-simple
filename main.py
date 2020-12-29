@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask import request
 
-from dbutils import get_papers
+from dbutils import get_papers, get_related_author
 
 app = Flask(__name__)
 
@@ -15,3 +15,9 @@ def search():
     del r['_id']
     result.append(r)
   return jsonify(result)
+
+@app.route('/dblp/related_author', methods=['GET'])
+def related_author():
+  author = request.args.get('author', '')
+  related_author = get_related_author(author).get('related', [])
+  return jsonify(related_author)

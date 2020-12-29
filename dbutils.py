@@ -3,6 +3,7 @@ from pymongo import MongoClient
 client = MongoClient('10.176.64.53', 27017)
 dblp = client.dblp
 infoCol = dblp.info
+authorCol = dblp.author
 
 def get_papers(keyword, field):
   keyword_regex = re.compile(keyword)
@@ -17,7 +18,25 @@ def get_papers(keyword, field):
   result = infoCol.find(query_dict).limit(50)
   return result
 
+def create_related_author():
+  author_dict = dict()
+  for paper in infoCol.find({}, {'author': 1}):
+    if paper.get('author', None):
+      authors = paper['author'].split(',')
+      author_set = set(authors)
+      for author in authors:
+        author_set.remove(author)
+        author_dict[author] = author_dict.get(author, set()) | author_set
+        author_set.add(author)
+  for author in author_dict.keys():
+    authorCol.insert({
+      'name': author,
+      'related': list(author_dict.get(author, []))
+    })
+
+def get_related_author(name):
+  return authorCol.find_one({'name': name})
+
 if __name__ == "__main__":
-  result = get_papers('multimodal', 'all')
-  for r in result:
-    print(r)
+  related_author = get_related_author('Daniel Gruss')
+  print(related_author)
