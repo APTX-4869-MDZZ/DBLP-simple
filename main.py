@@ -19,8 +19,14 @@ def search():
 @app.route('/dblp/related_author', methods=['GET'])
 def related_author():
   author = request.args.get('author', '')
-  related_author = get_related_author(author).get('related', [])
-  return jsonify(related_author)
+  related_author = get_related_author(author)
+  if related_author:
+    author_list = related_author.get('related', [])
+  else:
+    author_list = []
+  if len(author_list) > 50:
+    author_list = author_list[:50]
+  return jsonify(author_list)
 
 @app.route('/dblp/related_domain', methods=['GET'])
 def related_domain():
