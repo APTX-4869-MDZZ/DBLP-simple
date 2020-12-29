@@ -37,6 +37,9 @@ def create_related_author():
 def get_related_author(name):
   return authorCol.find_one({'name': name})
 
+def get_domain_paper(domain):
+  return infoCol.find({'domain': domain}).limit(50)
+
 if __name__ == "__main__":
-  related_author = get_related_author('Daniel Gruss')
-  print(related_author)
+  for r in get_domain_paper('Natural language processing'):
+    print(r)
